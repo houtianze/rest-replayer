@@ -1,3 +1,9 @@
+// https://www.npmjs.com/package/global-agent#usage
+// Import global-agent/bootstrap.
+// Export HTTP proxy address as GLOBAL_AGENT_HTTP_PROXY environment variable.
+
+// require('global-agent/bootstrap')
+
 const path= require('path')
 
 const Storage = require ('./storage')
@@ -58,5 +64,3 @@ function chooseStorerBackend(format) {
     debug(`storer: ${backend}`)
     return backend
 }
-// debug(argv)
-// require('global-agent/bootstrap')
