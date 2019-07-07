@@ -1,7 +1,6 @@
 // https://www.npmjs.com/package/global-agent#usage
 // Import global-agent/bootstrap.
 // Export HTTP proxy address as GLOBAL_AGENT_HTTP_PROXY environment variable.
-
 // require('global-agent/bootstrap')
 
 const path= require('path')
@@ -25,9 +24,9 @@ const argv = require('yargs')
     debug('recording with options:', argv)
     debug(`recording using: storage dir: ${argv.storageDir}; name: ${argv.name}; format: ${argv.format}`)
     let storage = new Storage(argv.storageDir, argv.name, argv.format)
-    const storerBackend = require(chooseStorerBackend(argv.format))
+    const StorerBackend = require(chooseStorerBackend(argv.format))
     storage.init().then(
-      record(argv.port, argv.target, storerBackend)
+      record(argv.port, argv.target, new StorerBackend(storage))
     )
   })
   .command('replay [args]', 'Replay http/rest traffics', (yargs) => {

@@ -16,25 +16,25 @@ function record(port, target, storerBackend) {
         }
 
         http.createServer((req, res) => {
-            // debug('onProxyReq', proxyRes, req, res)
-            debug(req.url, target)
+            debug("req url:", req.url)
             let reqUrl = new URL(req.url, target)
             let reqBodyChunks = []
-            debug('onProxyReq', req.method, req.headers, Array.isArray(req.headers['set-cookie']) , reqUrl)
             req.on('data', (chunk) => {
                 reqBodyChunks.push(chunk)
             })
             .on('end', () => {
                 let reqBody = Buffer.concat(reqBodyChunks)
                 reqBodyChuks = []
-                debug(reqBody)
+                debug("req body: ", reqBody.toString())
                 reqUrl.searchParams.forEach((value, name) => {
-                    debug(name, value)
+                    debug(`req param: ${name}=${value}`)
                 })
                 let reqOption = {
                     method: req.method,
                     headers: req.headers,
                 }
+                // TODO: submit PR for global-agent, it has to deal with `URL` and `string`
+                // You have to use reqUrl.href if you are using global-agent
                 let targetReq = httpHttps.request(reqUrl, reqOption, targetRes => {
                     let targetResBodyChunks = []
                     targetRes.on('data', chunk => {
@@ -42,18 +42,24 @@ function record(port, target, storerBackend) {
                     })
                     targetRes.on('end', () => {
                         let targetResBody = Buffer.concat(targetResBodyChunks)
-                        debug(targetRes.statusCode)
-                        debug(targetRes.headers)
-                        debug(targetResBody)
+                        debug(`res: status: ${targetRes.statusCode}; headers: ${targetRes.headers}`)
+                        debug("res body: ", targetResBody.toString())
                         res.writeHead(targetRes.statusCode, targetRes.headers)
                         res.end(targetResBody)
+
+                        let resProp = {
+                            statusCode: targetRes.statusCode,
+                            headers: JSON.stringify(targetRes.headers),
+                            body: targetResBody.toString()
+                        }
+                        let reqProp = {
+                            path: reqUrl.pathname,
+                            query: reqUrl.searchParams,
+                            headers: req.headers,
+                            body: reqBody.toString()
+                        }
+                        storer.store(resProp, reqProp, storerBackend)
                     })
-                    storer.store(targetRes, {
-                        path: reqUrl.pathname,
-                        query: reqUrl.searchParams,
-                        headers: req.headers,
-                        body: reqBody
-                    }, storerBackend)
                 })
                 targetReq.on('error', err => {
                     res.end(err)
