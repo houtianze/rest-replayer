@@ -17,7 +17,7 @@ const argv = require('yargs')
     })
   }, function (argv) {
     debug('recording with options:', argv)
-    debug('recording to:', argv.storageDir, argv.name, argv.format)
+    debug(`recording using: storage dir: ${argv.storageDir}; name: ${argv.name}; format: ${argv.format}`)
     let storage = new Storage(argv.storageDir, argv.name, argv.format)
     const storerBackend = require(chooseStorerBackend(argv.format))
     storage.init().then(
@@ -54,8 +54,8 @@ const argv = require('yargs')
   .argv
 
 function chooseStorerBackend(format) {
-    let backend = `./storer${path.sep}${format}_storer.js`
-    debug('storer', backend)
+    let backend = `${__dirname}/storer${path.sep}${format}_storer.js`
+    debug(`storer: ${backend}`)
     return backend
 }
 // debug(argv)

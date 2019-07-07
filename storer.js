@@ -3,7 +3,7 @@ const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':storer')
 
 class Storer {
-    store(option, backend) {
+    store(res, reqProp, backend) {
         // {path,  query, headers, body}
         function normalize(opt) {
             opt.query.sort()
@@ -21,11 +21,11 @@ class Storer {
                 return header
             })
         }
-        normalize(option)
-        debug(option)
-        var keyString = `path:${option.path}\nquery:${option.query}\nheaders:${option.headers}\nbody:${option.body}`
-        debug(keyString)
-        return backend.store(option, keyString)
+        normalize(reqProp)
+        debug(`request properties: ${reqProp}`)
+        var keyString = `path:${reqProp.path}\nquery:${reqProp.query}\nheaders:${reqProp.headers}\nbody:${reqProp.body}`
+        debug(`normalized request prop as string: ${keyString}`)
+        return backend.store(res, reqProp, keyString)
     }
 }
 
