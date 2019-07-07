@@ -7,6 +7,7 @@ const path= require('path')
 
 const Storage = require ('./storage')
 const record = require ('./recorder')
+const replay = require ('./replayer')
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':index')
 
@@ -31,7 +32,13 @@ const argv = require('yargs')
   })
   .command('replay [args]', 'Replay http/rest traffics', (yargs) => {
   }, function (argv) {
-    debug('replaying', argv, 'yo!')
+    debug('replaying with options:', argv)
+    debug(`replaying using: storage dir: ${argv.storageDir}; name: ${argv.name}; format: ${argv.format}`)
+    let storage = new Storage(argv.storageDir, argv.name, argv.format)
+    const StorerBackend = require(chooseStorerBackend(argv.format))
+    storage.init().then(
+      replay(argv.port, new StorerBackend(storage))
+    )
   })
   .option('name', {
       type: 'string',

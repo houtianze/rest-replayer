@@ -37,6 +37,10 @@ class JsonStorer {
         })
         return true
     }
+
+    retrieve(reqProp, keyString) {
+        return this.table[keyString]
+    }
 }
 
 module.exports = JsonStorer
