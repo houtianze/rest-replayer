@@ -1,0 +1,32 @@
+{
+  "name": "rest-replayer",
+  "version": "0.1.0",
+  "description": "REST API response replayer with customizable rules",
+  "main": "index.js",
+  "scripts": {
+    "node": "node index.js",
+    "nodemon": "nodemon index.js",
+    "nodemon:debug": "DEBUG='rest-replayer:*' nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rest",
+    "recorder",
+    "replayer",
+    "http"
+  ],
+  "author": "Hou Tianze",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "debug": "^4.1.1",
+    "express": "^4.17.1",
+    "fs-extra": "^8.0.1",
+    "global-agent": "^1.7.1",
+    "http-proxy-middleware": "^0.19.1",
+    "yargs": "^13.2.4"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}
