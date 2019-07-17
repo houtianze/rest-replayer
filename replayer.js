@@ -22,15 +22,17 @@ function replay(port, storerBackend) {
                     debug(`req param: ${name}=${value}`)
                 })
 
+                // TODO: a more grace solution
+                delete req.headers['host']
                 let reqProp = {
                     path: reqUrl.pathname,
                     query: reqUrl.searchParams,
                     headers: req.headers,
-                    body: reqBody.toString()
+                    body: reqBody
                 }
                 let resProp = storer.retrieve(reqProp, storerBackend)
                 if (resProp) {
-                    res.writeHead(resProp.statusCode, JSON.parse(resProp.headers))
+                    res.writeHead(resProp.statusCode, resProp.headers)
                     res.end(resProp.body)
                 } else {
                     res.statusCode = 404

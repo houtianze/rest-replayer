@@ -16,8 +16,9 @@ function record(port, target, storerBackend) {
         }
 
         http.createServer((req, res) => {
-            debug("req url:", req.url)
+            debug("original req url:", req.url)
             let reqUrl = new URL(req.url, target)
+            debug("target req url:", reqUrl)
             let reqBodyChunks = []
             req.on('data', (chunk) => {
                 reqBodyChunks.push(chunk)
@@ -29,6 +30,8 @@ function record(port, target, storerBackend) {
                 reqUrl.searchParams.forEach((value, name) => {
                     debug(`req param: ${name}=${value}`)
                 })
+                // TODO: a more grace solution
+                delete req.headers['host']
                 let reqOption = {
                     method: req.method,
                     headers: req.headers,
@@ -42,27 +45,27 @@ function record(port, target, storerBackend) {
                     })
                     targetRes.on('end', () => {
                         let targetResBody = Buffer.concat(targetResBodyChunks)
-                        debug(`res: status: ${targetRes.statusCode}; headers: ${targetRes.headers}`)
+                        debug(`res: status: ${targetRes.statusCode}; headers: ${JSON.stringify(targetRes.headers)}`)
                         debug("res body: ", targetResBody.toString())
                         res.writeHead(targetRes.statusCode, targetRes.headers)
                         res.end(targetResBody)
 
                         let resProp = {
                             statusCode: targetRes.statusCode,
-                            headers: JSON.stringify(targetRes.headers),
-                            body: targetResBody.toString()
+                            headers: targetRes.headers,
+                            body: targetResBody
                         }
                         let reqProp = {
                             path: reqUrl.pathname,
                             query: reqUrl.searchParams,
                             headers: req.headers,
-                            body: reqBody.toString()
+                            body: reqBody
                         }
                         storer.store(resProp, reqProp, storerBackend)
                     })
                 })
                 targetReq.on('error', err => {
-                    res.end(err)
+                    res.end(err.toString())
                 })
                 targetReq.write(reqBody)
                 targetReq.end()

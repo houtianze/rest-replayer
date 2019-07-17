@@ -30,16 +30,33 @@ class JsonStorer {
         })
     }
 
+    stringifyResProp(resProp) {
+        return JSON.stringify({
+            statusCode: resProp.statusCode,
+            headers: JSON.stringify(resProp.headers),
+            body: Buffer.from(resProp.body).toString('base64')
+        })
+    }
+
+    parseResPropString(resString) {
+        let res = JSON.parse(resString)
+        res.headers = JSON.parse(res.headers)
+        res.body = Buffer.from(res.body, 'base64')
+        return res
+    }
+
     store(resProp, reqProp, keyString) {
-        this.table[keyString] = resProp
+        this.table[keyString] = this.stringifyResProp(resProp)
         fs.writeFile(this.jsonFile, JSON.stringify(this.db), err => {
-            debug('writeFile error:', err)
+            if (err) {
+                debug('writeFile error:', err)
+            }
         })
         return true
     }
 
     retrieve(reqProp, keyString) {
-        return this.table[keyString]
+        return this.parseResPropString(this.table[keyString])
     }
 }
 

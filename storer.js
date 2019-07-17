@@ -11,17 +11,17 @@ class Storer {
                 headerNames.push(name)
             }
         }
-        reqProp.sortedHeader = []
         headerNames.sort()
-        reqProp.sortedHeader = headerNames.sort().map(name => {
+        reqProp.sortedHeaders = headerNames.map(name => {
             var header = {}
             header[name] = reqProp.headers[name]
             return header
         })
+        reqProp.base64Body = Buffer.from(reqProp.body).toString('base64')
     }
 
     getKeyString(reqProp) {
-        var keyString = `path:${reqProp.path}\nquery:${reqProp.query}\nheaders:${reqProp.headers}\nbody:${reqProp.body}`
+        var keyString = `path:${reqProp.path}\nquery:${reqProp.query}\nheaders:${JSON.stringify(reqProp.sortedHeaders)}\nbody:${reqProp.base64Body}`
         return keyString
     }
 
@@ -30,8 +30,8 @@ class Storer {
         this.normalizeReqProp(reqProp)
         debug(`req prop: ${reqProp}`)
         debug(`res prop: ${resProp}`)
-        var keyString = this.getKeyString(reqProp)
-        debug(`normalized request prop as string: ${keyString}`)
+        const keyString = this.getKeyString(reqProp)
+        debug(`[store] normalized request key: ${keyString}`)
         return backend.store(resProp, reqProp, keyString)
     }
 
@@ -39,7 +39,7 @@ class Storer {
         this.normalizeReqProp(reqProp)
         debug(`req prop: ${reqProp}`)
         var keyString = this.getKeyString(reqProp)
-        debug(`normalized request prop as string: ${keyString}`)
+        debug(`[retrieve] normalized request key: ${keyString}`)
         return backend.retrieve(reqProp, keyString)
     }
 }
