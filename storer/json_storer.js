@@ -39,6 +39,13 @@ class JsonStorer {
     }
 
     parseResPropString(resString) {
+        if (!resString) {
+            return {
+                statusCode: 404,
+                headers: {},
+                body: 'Not Found'
+            }
+        }
         let res = JSON.parse(resString)
         res.headers = JSON.parse(res.headers)
         res.body = Buffer.from(res.body, 'base64')
