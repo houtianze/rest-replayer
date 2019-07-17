@@ -5,11 +5,19 @@
 Record:
 
 ```bash
-node index.js record -t http://localhost:9004
+rest-replayer record -t http://localhost:9004
 ```
 
 Replay:
 
 ```bash
-node index.js replay
+rest-replayer replay
+```
+
+(Default port is 43210)
+
+Command line help:
+
+```bash
+rest-replayer -h
 ```
