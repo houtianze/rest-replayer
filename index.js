@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 
+// For https request recording, we need to disable cert verifications
+// This is quick and dirty, check the corresponding SO thread for more information
+// https://stackoverflow.com/a/20497028/404271
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // https://www.npmjs.com/package/global-agent#usage
 // Import global-agent/bootstrap.
 // Export HTTP proxy address as GLOBAL_AGENT_HTTP_PROXY environment variable.
-// require('global-agent/bootstrap')
+require('global-agent/bootstrap')
 
 const path= require('path')
 
@@ -58,11 +63,13 @@ const argv = require('yargs')
   .option('format', {
     type: 'string',
     alias: 'f',
-    default: 'json'
+    default: 'json',
+    describe: `Storage format`
   })
   .option('storage-dir', {
     type: 'string',
-    default: './storage'
+    default: './storage',
+    describe: `Storage directory`
   })
   .help()
   .argv

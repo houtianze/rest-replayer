@@ -1,9 +1,6 @@
 const path = require('path')
 const fs = require('fs')
 
-// const low = require('lowdb')
-// const FileSync = require('lowdb/adapters/FileSync')
-
 const Constant = require('../constant')
 const debug = require('debug')(Constant.AppName + ':json_storer')
 

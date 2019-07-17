@@ -38,7 +38,9 @@ function record(port, target, storerBackend) {
                 }
                 // TODO: submit PR for global-agent, it has to deal with `URL` and `string`
                 // You have to use reqUrl.href if you are using global-agent
-                let targetReq = httpHttps.request(reqUrl, reqOption, targetRes => {
+                // let targetReq = httpHttps.request(reqUrl, reqOption, targetRes => {})
+                let targetReq = httpHttps.request(reqUrl.toString(), reqOption, targetRes => {
+                // let targetReq = httpHttps.request(reqUrl, reqOption, targetRes => {
                     let targetResBodyChunks = []
                     targetRes.on('data', chunk => {
                         targetResBodyChunks.push(chunk)
