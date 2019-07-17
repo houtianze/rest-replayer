@@ -19,5 +19,5 @@ rest-replayer replay
 Command line help:
 
 ```bash
-rest-replayer -h
+rest-replayer --help
 ```
