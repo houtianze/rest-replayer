@@ -12,6 +12,8 @@ const debug = require('debug')(Constant.AppName + ':runner')
 const pr = require('./printer')
 const helper = require('./helper')
 
+const RecordNamePattern = /^[_.0-9a-zA-Z]+$/
+
 function getAllStorerFormats() {
     const formats = fs.readdirSync(Constant.StorerDir)
     .filter(name => {
@@ -19,7 +21,6 @@ function getAllStorerFormats() {
     }).map(name => {
         return name.substr(0, name.length - Constant.StorerSuffixWithExtension.length)
     })
-    pr.i(`supported formats: ${formats}`)
     return formats
 }
 
@@ -32,6 +33,12 @@ function getStorerBackend(storage) {
 }
 
 function prepare(option) {
+    if (!validateName(option.name)) {
+        const err = `Invalidate record name! (must match pattern: ${RecordNamePattern}`
+        pr.e(err)
+        throw err
+    }
+
     if (option.insecure) {
         // For https request recording, we need to disable cert verifications
         // This is quick and dirty, check the corresponding SO thread for more information
@@ -44,6 +51,10 @@ function prepare(option) {
         storage: storage,
         storerBackend: storerBackend
     }
+}
+
+function validateName(name) {
+    return RecordNamePattern.test(name)
 }
 
 class Runner {
@@ -62,7 +73,7 @@ class Runner {
     }
 
     listFormat() {
-        getAllStorerFormats().forEach(pr.i)
+        pr.i(`supported formats: getAllStorerFormats()`)
     }
 
     delete(option) {

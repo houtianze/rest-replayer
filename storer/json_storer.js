@@ -22,6 +22,15 @@ class JsonStorer {
         me.table = me.db[storage.name]
     }
 
+    createStorageJson() {
+        return {
+            verison: 1,
+            name: this.storage.name,
+            responseRetention: 'latest',
+            mapping: {}
+        }
+    }
+
     stringifyResProp(resProp) {
         return JSON.stringify({
             statusCode: resProp.statusCode,

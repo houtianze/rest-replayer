@@ -18,7 +18,7 @@
         },
         "name": {
             "type": "string",
-            "pattern": "[_.0-9a-zA-Z]+",
+            "pattern": "^[_.0-9a-zA-Z]+$",
             "default": "default",
             "$comment": "Name of the record"
         },
