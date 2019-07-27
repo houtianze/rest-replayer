@@ -7,7 +7,7 @@ class Storer {
         reqProp.query.sort()
         const headerNames = []
         for (let name in reqProp.headers) {
-            // TODO: more header handling like 'user-agent'
+            // TODO: better/customizable handling of "ignorable" headers
             if (reqProp.headers.hasOwnProperty(name)
                 && name !== 'user-agent'
                 && name !== 'etag'

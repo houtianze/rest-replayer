@@ -30,8 +30,7 @@
         },
         "mapping": {
             "anyOf": [
-                { "$ref": "#/definitions/requestResponseMapping" },
-                { "$ref": "#/definitions/requestResponseArray" }
+                { "$ref": "#/definitions/requestResponseMapping" }
             ]
         }
     },

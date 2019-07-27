@@ -41,6 +41,7 @@ class JsonStorer {
         }
     }
 
+    // stringify and base64 to better handle binary responses
     stringifyResProp(resProp) {
         return JSON.stringify({
             statusCode: resProp.statusCode,
@@ -64,13 +65,16 @@ class JsonStorer {
     }
 
     store(resProp, reqProp, keyString) {
-        me.db.mapping[keyString] = me.stringifyResProp(resProp)
+        me.db.mapping[keyString] = {
+            request: reqProp,
+            response: me.stringifyResProp(resProp)
+        }
         fs.writeFileSync(me.jsonFile, JSON.stringify(me.db))
         return true
     }
 
     retrieve(reqProp, keyString) {
-        return me.parseResPropString(me.db.mapping[keyString])
+        return me.parseResPropString(me.db.mapping[keyString].response)
     }
 
     deleteRecord() {
