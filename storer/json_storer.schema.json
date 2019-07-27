@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://github.com/houtianze/rest-replayer/tree/master/storer/json_storer.schema.json",
+    "type": "object",
+    "properties": {
+        "version": {
+            "type": "number"
+        },
+        "name": {
+            "type": "string",
+            "pattern": "[_.0-9a-zA-Z]+"
+        },
+        "responseRetention": {
+            "type": "string",
+            "enum": ["latest", "oldest", "sequential"]
+        },
+        "mapping": {
+            "type": "object"
+        }
+    }
+}

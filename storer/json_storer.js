@@ -8,7 +8,7 @@ class JsonStorer {
     constructor(storage) {
         const me = this
         this.storage = storage
-        this.jsonFile = `${storage.rootDir}${path.sep}storage.json`
+        this.jsonFile = `${storage.rootDir}${path.sep}${storage.format}${path.sep}storage.json`
         debug('json storage file:' , this.jsonFile)
         // fs.readFile(this.jsonFile, (err, data) => {
         //     if (err) {

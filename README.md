@@ -2,7 +2,7 @@
 
 You can use it to mock API servers that are unstable/changing from time to time instead of creating mock response manually each time.
 
-(Proxy support is through the npm package global-agent, read its npm page for more infomation)
+(Proxy support is through the npm package global-agent, read its [github page](https://github.com/gajus/global-agent) for more infomation)
 
 ## Basic usage
 
@@ -24,18 +24,14 @@ Command line help:
 
 ```bash
 rest-replayer --help
-
-rest-replayer <cmd> [args]
-
-Commands:
-  rest-replayer record [args]  Record http/rest traffics
-  rest-replayer replay [args]  Replay http/rest traffics
-
-Options:
-  --version      Show version number                                   [boolean]
-  --name, -n     Name of the record               [string] [default: "_default"]
-  --port, -p     The port for rest-replayer to listen on        [default: 43210]
-  --format, -f   Storage format                       [string] [default: "json"]
-  --storage-dir  Storage directory               [string] [default: "./storage"]
-  --help         Show help                                             [boolean]
 ```
+
+## Storage format
+
+### Currently implemented
+
+#### JSON : [Schema here](storer/json_storer.schema.json)
+
+### Planned (unimplemented)
+
+### SQLite
