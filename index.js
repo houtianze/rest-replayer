@@ -2,7 +2,10 @@
 
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':main')
-const runner = require('./runner')
+const printer = require('./printer')
+const Runner = require('./runner')
+
+const runner = new Runner(printer)
 
 const yargsArgv = require('yargs')
   .scriptName(Constant.AppName)

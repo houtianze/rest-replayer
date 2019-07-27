@@ -17,15 +17,16 @@ class Helper {
 
     confirm(question, yes, callback) {
         if (yes) {
-            callback()
+            return callback()
         } else {
             this.ask(question).then(ans => {
                 const ansLower = ans.toLowerCase()
                 if (ansLower === 'y' || ansLower === 'yes') {
-                    callback()
+                    return callback()
                 }
             })
         }
+        return false
     }
 }
 

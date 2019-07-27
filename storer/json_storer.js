@@ -7,17 +7,18 @@ const debug = require('debug')(Constant.AppName + ':json_storer')
 
 const pr = require('../printer')
 
+var me
 class JsonStorer {
     constructor(storage) {
-        const me = this
-        this.storage = storage
-        this.jsonFile = `${storage.formatRootDir}${path.sep}${storage.name}.json`
-        debug('json storage file:' , this.jsonFile)
+        me = this
+        me.storage = storage
+        me.jsonFile = `${storage.formatRootDir}${path.sep}${storage.name}.json`
+        debug('json storage file:' , me.jsonFile)
         try {
-            let json = fs.readFileSync(this.jsonFile)
+            let json = fs.readFileSync(me.jsonFile)
             me.db = JSON.parse(json.toString())
         } catch (ex) {
-            me.db = this.createStorageJson()
+            me.db = me.createStorageJson()
         }
         const schema = JSON.parse(fs.readFileSync(`${__dirname}${path.sep}json` +
             `${Constant.StorerSuffixWithExtension.substr(
@@ -25,7 +26,7 @@ class JsonStorer {
             `.schema.json`).toString());
         let validationResult = jsonSchemaValidate(me.db, schema)
         if (!validationResult.valid) {
-            let err = `Invalid JSON file: ${this.jsonFile}!\nValidation error: ${validationResult}`
+            let err = `Invalid JSON file: ${me.jsonFile}!\nValidation error: ${validationResult}`
             pr.e(err)
             throw err
         }
@@ -34,7 +35,7 @@ class JsonStorer {
     createStorageJson() {
         return {
             version: 1,
-            name: this.storage.name,
+            name: me.storage.name,
             responseRetention: 'latest',
             mapping: {}
         }
@@ -53,7 +54,7 @@ class JsonStorer {
             return {
                 statusCode: 404,
                 headers: {},
-                body: 'Not Found'
+                body: Constant.error.RespNotFound
             }
         }
         let res = JSON.parse(resString)
@@ -63,17 +64,17 @@ class JsonStorer {
     }
 
     store(resProp, reqProp, keyString) {
-        this.db.mapping[keyString] = this.stringifyResProp(resProp)
-        fs.writeFileSync(this.jsonFile, JSON.stringify(this.db))
+        me.db.mapping[keyString] = me.stringifyResProp(resProp)
+        fs.writeFileSync(me.jsonFile, JSON.stringify(me.db))
         return true
     }
 
     retrieve(reqProp, keyString) {
-        return this.parseResPropString(this.db.mapping[keyString])
+        return me.parseResPropString(me.db.mapping[keyString])
     }
 
     deleteRecord() {
-        fs.unlinkSync(this.jsonFile)
+        fs.unlinkSync(me.jsonFile)
     }
 }
 

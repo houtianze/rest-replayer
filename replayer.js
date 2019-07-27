@@ -36,7 +36,7 @@ function replay(port, storerBackend) {
                     res.end(resProp.body)
                 } else {
                     res.statusCode = 404
-                    res.end('NOT Found')
+                    res.end(Constant.error.RespNotFound)
                 }
             })
         }).listen(port)

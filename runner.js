@@ -9,7 +9,6 @@ const fs = require('fs-extra')
 const Constant = require('./constant')
 const Storage = require('./storage')
 const debug = require('debug')(Constant.AppName + ':runner')
-const pr = require('./printer')
 const helper = require('./helper')
 
 const RecordNamePattern = /^[_.0-9a-zA-Z]+$/
@@ -35,7 +34,7 @@ function getStorerBackend(storage) {
 function prepare(option) {
     if (!validateRecordName(option.name)) {
         const err = `Invalidate record name '${option.name}'! (must match pattern: ${RecordNamePattern}`
-        pr.e(err)
+        me.printer.e(err)
         throw err
     }
 
@@ -57,7 +56,13 @@ function validateRecordName(name) {
     return RecordNamePattern.test(name)
 }
 
+var me
 class Runner {
+    constructor(printer) {
+        me = this
+        me.printer = printer
+    }
+
     record(option) {
         let store = prepare(option)
         store.storage.init().then(
@@ -73,15 +78,17 @@ class Runner {
     }
 
     listFormat() {
-        pr.i(`supported formats: ${getAllStorerFormats()}`)
+        let formats = getAllStorerFormats()
+        me.printer.i(`supported formats: ${formats}`)
+        return formats
     }
 
     deleteRecord(option) {
         let store = prepare(option)
         helper.confirm(`Are you sure you want to delete record '${option.name}' for format '${option.format}'?`,
             option.yes,
-            () => store.storerBackend.deleteRecord(),
-            pr.i(`Record '${option.name}' for format '${option.format}' has been deleted.`)
+            store.storerBackend.deleteRecord,
+            me.printer.i(`Record '${option.name}' for format '${option.format}' has been deleted.`)
         )
     }
 
@@ -89,9 +96,9 @@ class Runner {
         let store = prepare(option)
         helper.confirm(`Are you sure you want to purge all records for fomart '${option.format}'?`,
             option.yes,
-            () => store.storage.purge().then(pr.i(`Files for format '${option.format}' has been purged.`))
+            () => store.storage.purge().then(me.printer.i(`Files for format '${option.format}' has been purged.`))
         )
     }
 }
 
-module.exports = new Runner()
+module.exports = Runner
