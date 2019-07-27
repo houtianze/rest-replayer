@@ -1,21 +1,39 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "https://github.com/houtianze/rest-replayer/tree/master/storer/json_storer.schema.json",
+    "$id": "https://raw.githubusercontent.com/houtianze/rest-replayer/master/storer/json_storer.schema.json#",
     "type": "object",
+    "definitions": {
+        "requestResponseMapping": {
+            "type": "object"
+        },
+        "requestResponseArray": {
+            "type": "array"
+        }
+    },
     "properties": {
         "version": {
-            "type": "number"
+            "type": "integer",
+            "minimum": 1,
+            "$comment": "Version number in integer, currently 1."
         },
         "name": {
             "type": "string",
-            "pattern": "[_.0-9a-zA-Z]+"
+            "pattern": "[_.0-9a-zA-Z]+",
+            "default": "default",
+            "$comment": "Name of the record"
         },
         "responseRetention": {
             "type": "string",
-            "enum": ["latest", "oldest", "sequential"]
+            "enum": ["latest", "oldest", "sequential"],
+            "default": "latest",
+            "$comment": "What to do with multiple responses received for the same request:\n - latest: keep the latest (default).\n - oldest: keep the earliest record.\n - sequetial: Keep all the responses in one array (NOT yet implemented)."
         },
         "mapping": {
-            "type": "object"
+            "anyOf": [
+                { "$ref": "#/definitions/requestResponseMapping" },
+                { "$ref": "#/definitions/requestResponseArray" }
+            ]
         }
-    }
+    },
+    "additionalProperties": false
 }
