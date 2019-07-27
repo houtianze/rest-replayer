@@ -2,7 +2,10 @@ const path = require('path')
 const fs = require('fs')
 
 const Constant = require('../constant')
+const jsonSchemaValidate = require('jsonschema').validate
 const debug = require('debug')(Constant.AppName + ':json_storer')
+
+const pr = require('../printer')
 
 class JsonStorer {
     constructor(storage) {
@@ -14,17 +17,23 @@ class JsonStorer {
             let json = fs.readFileSync(this.jsonFile)
             me.db = JSON.parse(json.toString())
         } catch (ex) {
-            me.db = {}
+            me.db = this.createStorageJson()
         }
-        if (!me.db[storage.name]) {
-            me.db[storage.name] = {}
+        const schema = JSON.parse(fs.readFileSync(`${__dirname}${path.sep}json` +
+            `${Constant.StorerSuffixWithExtension.substr(
+                0, Constant.StorerSuffixWithExtension.lastIndexOf('.'))}` +
+            `.schema.json`).toString());
+        let validationResult = jsonSchemaValidate(me.db, schema)
+        if (!validationResult.valid) {
+            let err = `Invalid JSON file: ${this.jsonFile}!\nValidation error: ${validationResult}`
+            pr.e(err)
+            throw err
         }
-        me.table = me.db[storage.name]
     }
 
     createStorageJson() {
         return {
-            verison: 1,
+            version: 1,
             name: this.storage.name,
             responseRetention: 'latest',
             mapping: {}
@@ -54,16 +63,16 @@ class JsonStorer {
     }
 
     store(resProp, reqProp, keyString) {
-        this.table[keyString] = this.stringifyResProp(resProp)
+        this.db.mapping[keyString] = this.stringifyResProp(resProp)
         fs.writeFileSync(this.jsonFile, JSON.stringify(this.db))
         return true
     }
 
     retrieve(reqProp, keyString) {
-        return this.parseResPropString(this.table[keyString])
+        return this.parseResPropString(this.db.mapping[keyString])
     }
 
-    delete() {
+    deleteRecord() {
         fs.unlinkSync(this.jsonFile)
     }
 }

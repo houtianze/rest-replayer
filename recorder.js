@@ -31,7 +31,7 @@ function record(port, target, storerBackend) {
                     debug(`req param: ${name}=${value}`)
                 })
                 // TODO: a more grace solution
-                delete req.headers['host']
+                delete req.headers.host
                 let reqOption = {
                     method: req.method,
                     headers: req.headers,

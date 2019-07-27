@@ -19,8 +19,8 @@ class Helper {
         if (yes) {
             callback()
         } else {
-            ask(question).then(ans => {
-                ansLower = ans.toLowerCase()
+            this.ask(question).then(ans => {
+                const ansLower = ans.toLowerCase()
                 if (ansLower === 'y' || ansLower === 'yes') {
                     callback()
                 }

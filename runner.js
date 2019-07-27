@@ -33,8 +33,8 @@ function getStorerBackend(storage) {
 }
 
 function prepare(option) {
-    if (!validateName(option.name)) {
-        const err = `Invalidate record name! (must match pattern: ${RecordNamePattern}`
+    if (!validateRecordName(option.name)) {
+        const err = `Invalidate record name '${option.name}'! (must match pattern: ${RecordNamePattern}`
         pr.e(err)
         throw err
     }
@@ -53,7 +53,7 @@ function prepare(option) {
     }
 }
 
-function validateName(name) {
+function validateRecordName(name) {
     return RecordNamePattern.test(name)
 }
 
@@ -73,23 +73,23 @@ class Runner {
     }
 
     listFormat() {
-        pr.i(`supported formats: getAllStorerFormats()`)
+        pr.i(`supported formats: ${getAllStorerFormats()}`)
     }
 
-    delete(option) {
+    deleteRecord(option) {
         let store = prepare(option)
         helper.confirm(`Are you sure you want to delete record '${option.name}' for format '${option.format}'?`,
             option.yes,
-            store.storerBackend.delete,
+            () => store.storerBackend.deleteRecord(),
             pr.i(`Record '${option.name}' for format '${option.format}' has been deleted.`)
         )
     }
 
     purge(option) {
-        let store = prepare(argv)
-        helper.confirm(`Are you sure you want to purge all records for fomart '${argv.format}'?`,
-            argv.yes,
-            () => store.storage.purge().then(pr.i(`Files for format '${argv.format}' has been purged.`))
+        let store = prepare(option)
+        helper.confirm(`Are you sure you want to purge all records for fomart '${option.format}'?`,
+            option.yes,
+            () => store.storage.purge().then(pr.i(`Files for format '${option.format}' has been purged.`))
         )
     }
 }

@@ -30,7 +30,7 @@ const yargsArgv = require('yargs')
   .command('delete [args]',
     'Delete storage for the given record name & format',
     (yargs) => {},
-    runner.delete)
+    runner.deleteRecord)
   .command('purge [args]',
     'Purge all records for the format',
     (yargs) => { },
