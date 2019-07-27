@@ -2,13 +2,18 @@ const fs = require('fs-extra')
 const path = require('path')
 
 module.exports = class Storage {
-    constructor(rootDir, name, format) {
+    constructor(rootDir, format, name) {
         this.rootDir = rootDir
-        this.name = name
         this.format = format
+        this.name = name
+        this.formatRootDir = path.join(this.rootDir, this.format)
     }
 
     init() {
-        return fs.ensureDir(path.join(this.rootDir, this.format))
+        return fs.ensureDir(this.formatRootDir)
+    }
+
+    purge() {
+        return fs.emptyDir(this.formatRootDir)
     }
 }

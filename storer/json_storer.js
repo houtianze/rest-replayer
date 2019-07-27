@@ -8,23 +8,8 @@ class JsonStorer {
     constructor(storage) {
         const me = this
         this.storage = storage
-        this.jsonFile = `${storage.rootDir}${path.sep}${storage.format}${path.sep}storage.json`
+        this.jsonFile = `${storage.formatRootDir}${path.sep}${storage.name}.json`
         debug('json storage file:' , this.jsonFile)
-        // fs.readFile(this.jsonFile, (err, data) => {
-        //     if (err) {
-        //         me.db = {}
-        //     } else {
-        //         try {
-        //             me.db = JSON.parse(data.toString())
-        //         } catch (ex){
-        //             me.db = {}
-        //         }
-        //     }
-        //     if (!me.db[storage.name]) {
-        //         me.db[storage.name] = {}
-        //     }
-        //     me.table = me.db[storage.name]
-        // })
         try {
             let json = fs.readFileSync(this.jsonFile)
             me.db = JSON.parse(json.toString())
@@ -61,17 +46,16 @@ class JsonStorer {
 
     store(resProp, reqProp, keyString) {
         this.table[keyString] = this.stringifyResProp(resProp)
-        // fs.writeFile(this.jsonFile, JSON.stringify(this.db), err => {
-        //     if (err) {
-        //         debug('writeFile error:', err)
-        //     }
-        // })
         fs.writeFileSync(this.jsonFile, JSON.stringify(this.db))
         return true
     }
 
     retrieve(reqProp, keyString) {
         return this.parseResPropString(this.table[keyString])
+    }
+
+    delete() {
+        fs.unlinkSync(this.jsonFile)
     }
 }
 

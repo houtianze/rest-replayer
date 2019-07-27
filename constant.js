@@ -1,4 +1,8 @@
+const path = require('path')
+
 module.exports = {
     AppName: 'rest-replayer',
-    DefaultRecordName: '_default'
+    StorerDir: `${__dirname}${path.sep}storer`,
+    StorerSuffixWithExtension: '_storer.js',
+    DefaultRecordName: 'default'
 }

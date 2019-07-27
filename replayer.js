@@ -23,7 +23,7 @@ function replay(port, storerBackend) {
                 })
 
                 // TODO: a more grace solution
-                delete req.headers['host']
+                delete req.headers.host
                 let reqProp = {
                     path: reqUrl.pathname,
                     query: reqUrl.searchParams,
