@@ -37,7 +37,7 @@ function prepare(option, printer) {
     option = helper.setObjectDefaultValues(option, Constant.DefaultConfig)
     debug('constructed with option:', option)
     if (!validateRecordName(option.name)) {
-        const err = `Invalidate record name '${option.name}'! (must match pattern: ${RecordNamePattern}`
+        const err = `Invalidate record name '${option.name}'! (must match pattern: ${RecordNamePattern})`
         me.printer.e(err)
         throw err
     }

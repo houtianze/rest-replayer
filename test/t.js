@@ -8,8 +8,10 @@ async function t() {
 
 function t0() {
 	let Runner = require('../runner')
-	const replayer = new Runner({}, printer)
+	let option = {target: 'https://jsonplaceholder.typicode.com'}
+	let replayer = new Runner(option, printer)
 	replayer.listFormat()
+	replayer = new Runner({name: 'invalid$'}, printer)
 }
 
 t0()
