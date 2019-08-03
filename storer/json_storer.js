@@ -69,11 +69,17 @@ class JsonStorer {
             request: reqProp,
             response: me.stringifyResProp(resProp)
         }
-        fs.writeFileSync(me.jsonFile, JSON.stringify(me.db))
         return true
     }
 
+    persist() {
+        fs.writeFileSync(me.jsonFile, JSON.stringify(me.db))
+    }
+
     retrieve(reqProp, keyString) {
+        if(!me.db.mapping[keyString] || !me.db.mapping[keyString].response) {
+            return null
+        }
         return me.parseResPropString(me.db.mapping[keyString].response)
     }
 

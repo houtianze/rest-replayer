@@ -1,3 +1,4 @@
+const printer = require('../printer')
 const h = require('../helper')
 
 async function t() {
@@ -5,5 +6,11 @@ async function t() {
 	console.log(`you said: ${ans}`)
 }
 
-t()
+function t0() {
+	let Runner = require('../runner')
+	const replayer = new Runner({}, printer)
+	replayer.listFormat()
+}
+
+t0()
 

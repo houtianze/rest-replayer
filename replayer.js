@@ -2,10 +2,11 @@ const http = require('http')
 
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':replayer')
-const storer = require('./storer')
+const Storer = require('./storer')
 
 function replay(port, storerBackend) {
     function run() {
+        let storer = new Storer(storerBackend)
         http.createServer((req, res) => {
             debug("req url:", req.url)
             const dummyHost = 'http://localhost'
@@ -30,7 +31,7 @@ function replay(port, storerBackend) {
                     headers: req.headers,
                     body: reqBody
                 }
-                let resProp = storer.retrieve(reqProp, storerBackend)
+                let resProp = storer.retrieve(reqProp)
                 if (resProp) {
                     res.writeHead(resProp.statusCode, resProp.headers)
                     res.end(resProp.body)

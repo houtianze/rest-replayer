@@ -2,7 +2,24 @@ const Constant = require('./constant')
 
 const debug = require('debug')(Constant.AppName + ':storer')
 
+var me
 class Storer {
+    constructor(backend) {
+        me = this
+        me.backend = backend
+        this.lastSaveTime = this.getMsSinceEpoch()
+        process.on('SIGINT', function() {
+            debug('Interrupted, saving req/res mappings...')
+            me.persist()
+            debug('Saving done')
+            process.exit()
+        });
+    }
+
+    getMsSinceEpoch() {
+        return (new Date()).getTime()
+    }
+
     normalizeReqProp(reqProp) {
         reqProp.query.sort()
         const headerNames = []
@@ -29,23 +46,36 @@ class Storer {
         return keyString
     }
 
-    store(resProp, reqProp, backend) {
+    store(resProp, reqProp) {
         // {path,  query, headers, body}
         this.normalizeReqProp(reqProp)
         debug(`req prop: ${reqProp}`)
         debug(`res prop: ${resProp}`)
         const keyString = this.getKeyString(reqProp)
         debug(`[store] normalized request key: ${keyString}`)
-        return backend.store(resProp, reqProp, keyString)
+        let r = this.backend.store(resProp, reqProp, keyString)
+        let now = this.getMsSinceEpoch()
+        if (now - this.lastSaveTime > Constant.SavingIntervalInSeconds * 1000) {
+            persist()
+            this.lastSaveTime = now
+        }
+        return r
     }
 
-    retrieve(reqProp, backend) {
+    persist() {
+        debug('persisting JSON')
+        let r = this.backend.persist()
+        debug('JSON persisted')
+        return r
+    }
+
+    retrieve(reqProp) {
         this.normalizeReqProp(reqProp)
         debug(`req prop: ${reqProp}`)
         var keyString = this.getKeyString(reqProp)
         debug(`[retrieve] normalized request key: ${keyString}`)
-        return backend.retrieve(reqProp, keyString)
+        return this.backend.retrieve(reqProp, keyString)
     }
 }
 
-module.exports = new Storer()
+module.exports = Storer

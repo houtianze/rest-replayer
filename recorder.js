@@ -3,10 +3,11 @@ const https = require('https')
 
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':recorder')
-const storer = require('./storer')
+const Storer = require('./storer')
 
 function record(port, target, storerBackend) {
     function run() {
+        let storer = new Storer(storerBackend)
         let targetUrl = new URL(target)
         let httpHttps = http
         if (targetUrl.protocol === 'http:') {
@@ -62,7 +63,7 @@ function record(port, target, storerBackend) {
                             headers: req.headers,
                             body: reqBody
                         }
-                        storer.store(resProp, reqProp, storerBackend)
+                        storer.store(resProp, reqProp)
                     })
                 })
                 targetReq.on('error', err => {

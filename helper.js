@@ -1,6 +1,13 @@
 const rl = require('readline');
 
 class Helper {
+    setObjectDefaultValues(dst, src) {
+        dst = dst || {}
+        let srcCopy = Object.assign({}, src)
+        Object.assign(srcCopy, dst)
+        return Object.assign(dst, srcCopy)
+    }
+
     // https://coderwall.com/p/v16yja/simple-node-js-prompt
     ask(question) {
         const promise = new Promise((resolve, reject) => {

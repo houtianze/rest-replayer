@@ -31,7 +31,11 @@ function getStorerBackend(storage) {
     return storerBackend
 }
 
-function prepare(option) {
+function prepare(option, printer) {
+    me.printer = printer
+
+    option = helper.setObjectDefaultValues(option, Constant.DefaultConfig)
+    debug('constructed with option:', option)
     if (!validateRecordName(option.name)) {
         const err = `Invalidate record name '${option.name}'! (must match pattern: ${RecordNamePattern}`
         me.printer.e(err)
@@ -44,12 +48,9 @@ function prepare(option) {
         // https://stackoverflow.com/a/20497028/404271
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     }
-    const storage = new Storage(option.storageDir, option.format, option.name)
-    const storerBackend = getStorerBackend(storage)
-    return {
-        storage: storage,
-        storerBackend: storerBackend
-    }
+    me.option = option
+    me.storage = new Storage(option.storageDir, option.format, option.name)
+    me.storerBackend = getStorerBackend(me.storage)
 }
 
 function validateRecordName(name) {
@@ -58,22 +59,20 @@ function validateRecordName(name) {
 
 var me
 class Runner {
-    constructor(printer) {
+    constructor(option, printer) {
         me = this
-        me.printer = printer
+        prepare(option, printer)
     }
 
-    record(option) {
-        let store = prepare(option)
-        store.storage.init().then(
-            require('./recorder')(option.port, option.target, store.storerBackend)
+    record() {
+        me.storage.init().then(
+            require('./recorder')(me.option.port, me.option.target, me.storerBackend)
         )
     }
 
-    replay(option) {
-        let store = prepare(option)
-        store.storage.init().then(
-            require('./replayer')(option.port, store.storerBackend)
+    replay() {
+        me.storage.init().then(
+            require('./replayer')(me.option.port, me.storerBackend)
         )
     }
 
@@ -83,20 +82,18 @@ class Runner {
         return formats
     }
 
-    deleteRecord(option) {
-        let store = prepare(option)
-        helper.confirm(`Are you sure you want to delete record '${option.name}' for format '${option.format}'?`,
-            option.yes,
+    deleteRecord() {
+        helper.confirm(`Are you sure you want to delete record '${me.option.name}' for format '${me.option.format}'?`,
+            me.option.yes,
             store.storerBackend.deleteRecord,
-            me.printer.i(`Record '${option.name}' for format '${option.format}' has been deleted.`)
+            me.printer.i(`Record '${me.option.name}' for format '${me.option.format}' has been deleted.`)
         )
     }
 
-    purge(option) {
-        let store = prepare(option)
-        helper.confirm(`Are you sure you want to purge all records for fomart '${option.format}'?`,
-            option.yes,
-            () => store.storage.purge().then(me.printer.i(`Files for format '${option.format}' has been purged.`))
+    purge() {
+        helper.confirm(`Are you sure you want to purge all records for format '${me.option.format}'?`,
+            me.option.yes,
+            () => store.storage.purge().then(me.printer.i(`Files for format '${me.option.format}' has been purged.`))
         )
     }
 }
