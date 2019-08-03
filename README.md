@@ -6,7 +6,7 @@ You can use it to mock API servers that are unstable/changing from time to time 
 
 ## Usage scenario
 
-1. Record, finish tests and stop recording (responses will be saved)
+- Record, finish tests and stop recording (responses will be saved)
 
 ```text
 +-------------+    +--------------------+    +--------------------------+
@@ -14,7 +14,7 @@ You can use it to mock API servers that are unstable/changing from time to time 
 +-------------+    +--------------------+    +--------------------------+
 ```
 
-2. Replay the test
+- Replay the test
 
 ```text
 +-------------+    +--------------------+
@@ -22,7 +22,7 @@ You can use it to mock API servers that are unstable/changing from time to time 
 +-------------+    +--------------------+
 ```
 
-3. Check in the record file `<name>.json` (by default, it's `default.json`) to your version control, and you can always use step 2 to re-test your app/code, without any external server dependencies
+- Check in the record file `<name>.json` (by default, it's `default.json`) to your version control, and you can always use step 2 to re-test your app/code, without any external server dependencies
 
 ## Basic usage
 
