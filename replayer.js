@@ -3,6 +3,7 @@ const http = require('http')
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':replayer')
 const Storer = require('./storer')
+const helper = require('./helper')
 
 function replay(port, storerBackend) {
     function run() {
@@ -17,14 +18,13 @@ function replay(port, storerBackend) {
             })
             .on('end', () => {
                 let reqBody = Buffer.concat(reqBodyChunks)
-                reqBodyChuks = []
+                reqBodyChunks = []
                 debug("req body: ", reqBody.toString())
                 reqUrl.searchParams.forEach((value, name) => {
                     debug(`req param: ${name}=${value}`)
                 })
 
-                // TODO: a more grace solution
-                delete req.headers.host
+                helper.cleanHeaders(req.headers)
                 let reqProp = {
                     path: reqUrl.pathname,
                     query: reqUrl.searchParams,

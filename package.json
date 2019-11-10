@@ -36,9 +36,11 @@
     "fs-extra": "^8.0.1",
     "global-agent": "^2.0.0",
     "jsonschema": "^1.2.4",
+    "linebyline": "^1.3.0",
     "yargs": "^13.2.4"
   },
   "devDependencies": {
+    "eslint": "^6.6.0",
     "flow-bin": "^0.102.0",
     "nodemon": "^1.19.1"
   }

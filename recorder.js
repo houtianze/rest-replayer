@@ -4,6 +4,7 @@ const https = require('https')
 const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':recorder')
 const Storer = require('./storer')
+const helper = require('./helper')
 
 function record(port, target, storerBackend) {
     function run() {
@@ -26,13 +27,12 @@ function record(port, target, storerBackend) {
             })
             .on('end', () => {
                 let reqBody = Buffer.concat(reqBodyChunks)
-                reqBodyChuks = []
+                reqBodyChunks = []
                 debug("req body: ", reqBody.toString())
                 reqUrl.searchParams.forEach((value, name) => {
                     debug(`req param: ${name}=${value}`)
                 })
-                // TODO: a more grace solution
-                delete req.headers.host
+                helper.cleanHeaders(req.headers)
                 let reqOption = {
                     method: req.method,
                     headers: req.headers,

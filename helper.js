@@ -1,4 +1,5 @@
-const rl = require('readline');
+const rl = require('linebyline');
+const Constant = require('./constant');
 
 class Helper {
     setObjectDefaultValues(dst, src) {
@@ -10,7 +11,7 @@ class Helper {
 
     // https://coderwall.com/p/v16yja/simple-node-js-prompt
     ask(question) {
-        const promise = new Promise((resolve, reject) => {
+        const promise = new Promise((resolve) => {
             const ri = rl.createInterface({
                 input: process.stdin,
                 output: process.stdout})
@@ -34,6 +35,27 @@ class Helper {
             })
         }
         return false
+    }
+
+    cleanHeaders(headers, override) {
+        if (!override) {
+            override = []
+        }
+
+        if (!override.mustRemove) {
+            override.mustRemove = []
+        }
+
+        if (!override.mustKeep) {
+            override.mustKeep = []
+        }
+        // mustKeep take precedences over mustRemove
+        var defaultRemovedHeaderNames = Constant.ForbiddenHeaderNames.concat(Constant.DefaultRemovedHeaderNames).concat(override.mustRemove)
+        defaultRemovedHeaderNames.forEach(header => {
+            if (!override.mustKeep) {
+                delete headers[header]
+            }
+        })
     }
 }
 

@@ -22,19 +22,15 @@ const yargsArgv = require('yargs')
   .command(
     'replay [args]',
     'Replay http/rest traffics',
-    yargs => { },
     yargs => { return new Runner(yargs, printer).replay() } )
   .command('list-format [args]',
     'List all supported storage formats',
-    yargs => { },
     yargs => { return new Runner(yargs, printer).listFormat() } )
   .command('delete [args]',
     'Delete storage for the given record name & format',
-    yargs => {},
     yargs => { return new Runner(yargs, printer).deleteRecord() } )
   .command('purge [args]',
     'Purge all records for the format',
-    yargs => { },
     yargs => { return new Runner(yargs, printer).purge() } )
   .option('name', {
       type: 'string',

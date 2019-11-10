@@ -85,7 +85,7 @@ class Runner {
     deleteRecord() {
         helper.confirm(`Are you sure you want to delete record '${me.option.name}' for format '${me.option.format}'?`,
             me.option.yes,
-            store.storerBackend.deleteRecord,
+            me.storerBackend.deleteRecord,
             me.printer.i(`Record '${me.option.name}' for format '${me.option.format}' has been deleted.`)
         )
     }
@@ -93,7 +93,7 @@ class Runner {
     purge() {
         helper.confirm(`Are you sure you want to purge all records for format '${me.option.format}'?`,
             me.option.yes,
-            () => store.storage.purge().then(me.printer.i(`Files for format '${me.option.format}' has been purged.`))
+            () => me.storage.purge().then(me.printer.i(`Files for format '${me.option.format}' has been purged.`))
         )
     }
 }

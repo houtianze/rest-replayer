@@ -7,6 +7,37 @@ module.exports = {
     StorerSuffixWithExtension: '_storer.js',
     SavingIntervalInSeconds: 300,
 
+    // factual constants
+    // https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_header_name
+    ForbiddenHeaderNames: [
+        'Accept-Charset',
+        'Accept-Encoding',
+        'Access-Control-Request-Headers',
+        'Access-Control-Request-Method',
+        'Connection',
+        'Content-Length',
+        'Cookie',
+        'Cookie2',
+        'Date',
+        'DNT',
+        'Expect',
+        'Host',
+        'Keep-Alive',
+        'Origin',
+        'Proxy-',
+        'Sec-',
+        'Referer',
+        'TE',
+        'Trailer',
+        'Transfer-Encoding',
+        'Upgrade',
+        'Via',
+    ].map(x => x.toLowerCase()),
+    DefaultRemovedHeaderNames: [
+        'User-Agent',
+        'ETag',
+        'If-None-Match'
+    ].map(x => x.toLowerCase()),
 
     // app constants
     error: {
