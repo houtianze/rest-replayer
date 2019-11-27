@@ -60,7 +60,6 @@ replayer.listFormat()
 replayer.record()
 ```
 
-
 ## Storage format
 
 ### Currently implemented
