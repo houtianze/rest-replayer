@@ -30,8 +30,22 @@ You can use it to mock API servers that are unstable/changing from time to time 
 
 Record:
 
+(Default listening port is 43210)
+
 ```bash
-rest-replayer record -t http://localhost:9004
+rest-replayer record -t https://jsonplaceholder.typicode.com
+```
+
+- with proxy
+
+```bash
+GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8080 rest-replayer record -t https://jsonplaceholder.typicode.com
+```
+
+- debug with nodemon (Development only and if you are inside the code directory)
+
+```bash
+npm run nodemon:debug record -- -t https://jsonplaceholder.typicode.com
 ```
 
 Replay:
@@ -39,8 +53,6 @@ Replay:
 ```bash
 rest-replayer replay
 ```
-
-(Default port is 43210)
 
 Command line help:
 

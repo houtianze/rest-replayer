@@ -52,7 +52,7 @@ class Helper {
         // mustKeep take precedences over mustRemove
         var defaultRemovedHeaderNames = Constant.ForbiddenHeaderNames.concat(Constant.DefaultRemovedHeaderNames).concat(override.mustRemove)
         defaultRemovedHeaderNames.forEach(header => {
-            if (!override.mustKeep) {
+            if (!override.mustKeep || override.mustKeep.length == 0) {
                 delete headers[header]
             }
         })
