@@ -4,6 +4,7 @@ const Constant = require('./constant')
 const debug = require('debug')(Constant.AppName + ':replayer')
 const Storer = require('./storer')
 const helper = require('./helper')
+const { URL } = require('url')
 
 function replay(port, storerBackend) {
     function run() {
