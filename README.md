@@ -39,7 +39,7 @@ rest-replayer record -t https://jsonplaceholder.typicode.com
 - with proxy
 
 ```bash
-GLOBAL_AGENT_HTTP_PROXY=http://127.0.0.1:8080 rest-replayer record -t https://jsonplaceholder.typicode.com
+GLOBAL_AGENT_HTTP_PROXY=http://proxy:port rest-replayer record -t https://jsonplaceholder.typicode.com
 ```
 
 - debug with nodemon (Development only and if you are inside the code directory)
